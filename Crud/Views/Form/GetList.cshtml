@@ -1,0 +1,73 @@
+﻿@{
+    IEnumerable<CrudViewModel> table = ViewBag.item;
+}
+<div class="container">
+    <h2 class="text-center">List of All users</h2>
+    <div class="row clearfix">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-bordered table-hover table-sortable col-12" >
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            Name
+                        </th>
+                        <th class="text-center">
+                            Father Name
+                        </th>
+                        <th class="text-center">
+                            CNIC
+                        </th>
+                        <th class="text-center">
+                            Location
+                        </th>
+                        <th class="text-center">
+                            Age
+                        </th>
+                        <th class="text-center">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var data in table)
+                    {
+                    <tr class="hidden">
+                        <td id="tbid" hidden>
+                            <input asp-for="@data.Id"  />
+                        </td>
+                        <td id="tbname">
+                            @data.Name
+                        </td>
+                        <td id="tbfname">
+                            @data.FatherName
+                        </td>
+                        <td id="tbcnin">
+                            @data.CNIC
+                        </td>
+                        <td id="tblocation">
+                            @data.Location
+                        </td>
+                        <td id="tbage">
+                            @data.Age
+                        </td>
+                        <td>
+                            @*<a class="dg-btnedit btn btn-xs btn-warning glyphicon glyphicon-edit" href="/Form/Index/@data.Id">Edit</a>*@
+                            <a class="dg-btnedit btn btn-xs btn-warning glyphicon glyphicon-edit" onclick=" edt(@data.Id)">Edit</a>
+                            <a class="dg-btndelete btn btn-xs btn-danger glyphicon glyphicon-trash" onclick=" Del(@data.Id)">Delete</a>
+                            @*<form asp-action="Delete" asp-route-id="@data.Id" data-ajax="true">
+                                <button type="submit" class="btn btn-sm btn-danger d-none d-md-inline-block">
+                                    Delete
+                                </button>
+                            </form>*@
+                        </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a asp-action="Index" asp-controller="Form" class="btn btn-primary float-right">Create</a>
+</div>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">

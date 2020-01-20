@@ -1,0 +1,156 @@
+﻿@model CrudViewModel
+
+
+<div class="container" id="MyModal">
+    <div class="col-6">
+        <div id="fom">
+
+        </div>
+        <div class="formpost">
+            <input id="hidid" asp-for="Id" hidden />
+            <div class="form-group ">
+                <div class="input-group">
+                    <input asp-for="Name" type="text" placeholder="Enter Name " class="form-control " id="name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input asp-for="FatherName" type="text" class="form-control " id="faname" placeholder="Enter Father Name" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input asp-for="CNIC" type="text" class="form-control " id="cnic" placeholder="Enter CNIC" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input asp-for="Location" type="text" class="form-control location" id="location" placeholder="Enter Address" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input asp-for="Age" type="text" class="form-control location" id="age" placeholder="Enter Age" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" id="save" onclick="save()"> Save</button>
+                <button class="btn btn-danger" id="erst">Rest</button>
+                <a class="dg-btndelete btn btn-xs btn-info" asp-action="GetList" asp-controller="Form">List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tbl">
+
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        //use for window upload funcation
+        //$(document).ready(function(){
+        //});
+ 
+        $('#erst').click(function() {
+            $("#faname").val();
+            $("#name").val();
+              $('#name').attr("value", "");  
+            $("#hidid").val();
+            $("#location").val();
+            $("#age").val();
+            $("#cnic").val();
+        });
+        window.onload = function () {
+            pagecall();
+          
+        }
+        function save() {
+            //debugger;
+            var Pname = $('#name').val();
+            var Pfname = $('#faname').val();
+            var Pcnic = $('#cnic').val();
+            var Plocation = $('#location').val();
+            var PAge = $('#age').val()
+            var pid = $('#hidid').val();
+            var obj = new Object();
+            obj.Name = Pname;
+            obj.FatherName = Pfname;
+            obj.CNIC = Pcnic;
+            obj.Location = Plocation;
+            obj.Age = PAge;
+            obj.Id = pid;
+            //alert("Your Form Data are " + Pname + "&" + Pfname + "\n" + Pcnic + "\n" + Plocation);
+
+            if (Pname === null || Pname === undefined &&
+                Pfname === null || Pfname === undefined &&
+                Pcnic === null || Pcnic === undefined &&
+                Plocation === null || Plocation === undefined &&
+                PAge === null || PAge === undefined
+            ) {
+                alert("Please Fill form ");
+            }
+            else {
+                $.ajax({
+                    url: "/Form/Index",
+                    type: "post",
+                    data: obj,
+                    success: function (res) {
+                        $('#tbl').html(res);
+                        //alert("Submitted");
+                    }
+                });
+            }
+        }
+        function pagecall() {
+            $.ajax({
+                url: "/Form/GetList",
+                type: "get",
+                success: function (res) {
+                    $('#tbl').html(res);
+
+                }
+            });
+        }
+        function Del(id) {
+            var sd = new Object();
+            var temp = id;
+            sd.Id = temp;
+            $.ajax({
+                type: "post",
+                url: "/Form/Delete/",
+                data: { id: temp },
+                success: function (res) {
+                    $('#tbl').html(res);
+                    //alert("Submit");
+                }
+            });
+        }
+
+
+        function edt(id) {
+            var sd = new Object();
+            var temp = id;
+            sd.Id = temp;
+            $.ajax({
+                type: 'post',
+                url: "/Form/editrecode?id=" + temp,
+                success: function (res) {
+                    debugger
+                    //var name = document.getElementById("name").value = res.fatherName;
+                    //name.value(res.fatherName)
+                    $("#faname").val(res.fatherName);
+                    $("#name").val(res.name);
+                    $("#hidid").val(res.id);
+                    $("#location").val(res.location);
+                    $("#age").val(res.age);
+                    $("#cnic").val(res.cnic);
+
+                }
+            });
+        }
+    </script>
+}
